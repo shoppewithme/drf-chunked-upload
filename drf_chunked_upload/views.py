@@ -186,14 +186,14 @@ class ChunkedUploadView(ListModelMixin, RetrieveModelMixin,
 
             chunked_upload.append_chunk(chunk, chunk_size=chunk_size)
         else:
-            user = request.user if request.user.is_authenticated() else None
+            user = request.user if request.user else None
             chunked_upload = self.serializer_class(data=request.data)
             if not chunked_upload.is_valid():
                 raise ChunkedUploadError(status=status.HTTP_400_BAD_REQUEST,
                                          detail=chunked_upload.errors)
             # chunked_upload is currently a serializer;
             # save returns model instance
-            chunked_upload = chunked_upload.save(user=user, offset=chunk.size)
+            chunked_upload = chunked_upload.save(offset=chunk.size)
 
         return chunked_upload
 
